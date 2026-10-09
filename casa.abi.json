@@ -1,0 +1,215 @@
+[
+  {
+    "inputs": [],
+    "stateMutability": "nonpayable",
+    "type": "constructor"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": true,
+        "internalType": "uint256",
+        "name": "id",
+        "type": "uint256"
+      },
+      {
+        "indexed": false,
+        "internalType": "string",
+        "name": "casa",
+        "type": "string"
+      },
+      {
+        "indexed": false,
+        "internalType": "string",
+        "name": "dispositivo",
+        "type": "string"
+      },
+      {
+        "indexed": false,
+        "internalType": "string",
+        "name": "estado",
+        "type": "string"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "timestamp",
+        "type": "uint256"
+      },
+      {
+        "indexed": true,
+        "internalType": "address",
+        "name": "registradoPor",
+        "type": "address"
+      }
+    ],
+    "name": "EventoRegistrado",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": true,
+        "internalType": "address",
+        "name": "ownerAnterior",
+        "type": "address"
+      },
+      {
+        "indexed": true,
+        "internalType": "address",
+        "name": "ownerNuevo",
+        "type": "address"
+      }
+    ],
+    "name": "OwnerCambiado",
+    "type": "event"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "_nuevoOwner",
+        "type": "address"
+      }
+    ],
+    "name": "cambiarOwner",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "_id",
+        "type": "uint256"
+      }
+    ],
+    "name": "obtenerEvento",
+    "outputs": [
+      {
+        "internalType": "string",
+        "name": "casa",
+        "type": "string"
+      },
+      {
+        "internalType": "string",
+        "name": "dispositivo",
+        "type": "string"
+      },
+      {
+        "internalType": "string",
+        "name": "estado",
+        "type": "string"
+      },
+      {
+        "internalType": "uint256",
+        "name": "timestamp",
+        "type": "uint256"
+      },
+      {
+        "internalType": "address",
+        "name": "registradoPor",
+        "type": "address"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "obtenerTodosLosEventos",
+    "outputs": [
+      {
+        "components": [
+          {
+            "internalType": "string",
+            "name": "casa",
+            "type": "string"
+          },
+          {
+            "internalType": "string",
+            "name": "dispositivo",
+            "type": "string"
+          },
+          {
+            "internalType": "string",
+            "name": "estado",
+            "type": "string"
+          },
+          {
+            "internalType": "uint256",
+            "name": "timestamp",
+            "type": "uint256"
+          },
+          {
+            "internalType": "address",
+            "name": "registradoPor",
+            "type": "address"
+          }
+        ],
+        "internalType": "struct CasaInteligente.Evento[]",
+        "name": "",
+        "type": "tuple[]"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "obtenerTotalEventos",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "owner",
+    "outputs": [
+      {
+        "internalType": "address",
+        "name": "",
+        "type": "address"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "string",
+        "name": "_casa",
+        "type": "string"
+      },
+      {
+        "internalType": "string",
+        "name": "_dispositivo",
+        "type": "string"
+      },
+      {
+        "internalType": "string",
+        "name": "_estado",
+        "type": "string"
+      },
+      {
+        "internalType": "uint256",
+        "name": "_timestamp",
+        "type": "uint256"
+      }
+    ],
+    "name": "registrarEvento",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  }
+]

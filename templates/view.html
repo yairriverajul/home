@@ -1,0 +1,600 @@
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Casa Inteligente | Historial Blockchain</title>
+
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      background: #0f172a;
+      color: #e2e8f0;
+      font-family: Arial, sans-serif;
+    }
+
+    header {
+      background: #1e293b;
+      padding: 24px;
+      text-align: center;
+      border-bottom: 2px solid #38bdf8;
+    }
+
+    header h1 {
+      color: #38bdf8;
+      margin: 0 0 10px;
+    }
+
+    header p {
+      color: #94a3b8;
+      margin: 0;
+    }
+
+    main {
+      max-width: 1200px;
+      margin: auto;
+      padding: 25px;
+    }
+
+    .section-title {
+      margin-top: 30px;
+      color: #38bdf8;
+    }
+
+    .cards {
+      display: grid;
+      grid-template-columns: repeat(
+        auto-fit,
+        minmax(220px, 1fr)
+      );
+      gap: 18px;
+      margin-top: 20px;
+    }
+
+    .card {
+      background: #1e293b;
+      border-radius: 12px;
+      padding: 25px;
+      box-shadow: 0 4px 12px #0003;
+    }
+
+    .card h3 {
+      margin-top: 0;
+      color: #94a3b8;
+    }
+
+    .numero {
+      font-size: 35px;
+      font-weight: bold;
+      color: #38bdf8;
+    }
+
+    .estado {
+      font-size: 23px;
+      font-weight: bold;
+    }
+
+    .on {
+      color: #4ade80;
+    }
+
+    .off {
+      color: #f87171;
+    }
+
+    .desconocido {
+      color: #94a3b8;
+    }
+
+    .filtros {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin: 20px 0;
+    }
+
+    select, button {
+      padding: 12px;
+      border-radius: 8px;
+      border: 1px solid #334155;
+      background: #1e293b;
+      color: white;
+      cursor: pointer;
+    }
+
+    button {
+      background: #0284c7;
+      border: none;
+    }
+
+    button:hover {
+      background: #0369a1;
+    }
+
+    .timeline {
+      margin-top: 25px;
+      border-left: 3px solid #38bdf8;
+      padding-left: 22px;
+    }
+
+    .evento {
+      position: relative;
+      background: #1e293b;
+      padding: 18px;
+      margin-bottom: 18px;
+      border-radius: 10px;
+    }
+
+    .evento::before {
+      content: "";
+      position: absolute;
+      left: -31px;
+      top: 22px;
+      width: 14px;
+      height: 14px;
+      background: #38bdf8;
+      border-radius: 50%;
+    }
+
+    .evento h3 {
+      margin: 0 0 10px;
+    }
+
+    .evento p {
+      margin: 6px 0;
+      color: #cbd5e1;
+    }
+
+    .table-container {
+      overflow-x: auto;
+      margin-top: 20px;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      background: #1e293b;
+      border-radius: 10px;
+      overflow: hidden;
+    }
+
+    th, td {
+      padding: 14px;
+      text-align: left;
+      border-bottom: 1px solid #334155;
+    }
+
+    th {
+      background: #334155;
+      color: #38bdf8;
+    }
+
+    tr:hover {
+      background: #263449;
+    }
+
+    .mensaje {
+      padding: 15px;
+      margin-top: 20px;
+      background: #1e293b;
+      border-radius: 8px;
+      color: #94a3b8;
+    }
+
+    .error {
+      color: #f87171;
+    }
+
+    footer {
+      text-align: center;
+      padding: 25px;
+      margin-top: 40px;
+      color: #64748b;
+    }
+  </style>
+</head>
+
+<body>
+
+<header>
+  <h1>🏠 Casa Inteligente</h1>
+  <p>Historial de focos registrado en Ethereum Sepolia</p>
+  <p id="conexion">Consultando blockchain...</p>
+</header>
+
+<main>
+
+  <h2 class="section-title">Resumen general</h2>
+
+  <div class="cards">
+
+    <div class="card">
+      <h3>Total de eventos</h3>
+      <div class="numero" id="totalEventos">0</div>
+    </div>
+
+    <div class="card">
+      <h3>Encendidos registrados</h3>
+      <div class="numero" id="totalOn">0</div>
+    </div>
+
+    <div class="card">
+      <h3>Apagados registrados</h3>
+      <div class="numero" id="totalOff">0</div>
+    </div>
+
+  </div>
+
+  <h2 class="section-title">Último estado registrado</h2>
+
+  <div class="cards">
+
+    <div class="card">
+      <h3>💡 Foco 1</h3>
+      <div class="estado desconocido" id="estadoFoco1">
+        Sin registros
+      </div>
+      <p id="fechaFoco1">Sin actividad</p>
+    </div>
+
+    <div class="card">
+      <h3>💡 Foco 2</h3>
+      <div class="estado desconocido" id="estadoFoco2">
+        Sin registros
+      </div>
+      <p id="fechaFoco2">Sin actividad</p>
+    </div>
+
+  </div>
+
+  <h2 class="section-title">Filtros del historial</h2>
+
+  <div class="filtros">
+
+    <select id="filtroFoco" onchange="mostrarHistorial()">
+      <option value="todos">Todos los focos</option>
+      <option value="foco1">Foco 1</option>
+      <option value="foco2">Foco 2</option>
+    </select>
+
+    <select id="filtroEstado" onchange="mostrarHistorial()">
+      <option value="todos">Todos los estados</option>
+      <option value="ON">Encendidos</option>
+      <option value="OFF">Apagados</option>
+    </select>
+
+    <button onclick="cargarEventos()">
+      Actualizar ahora
+    </button>
+
+  </div>
+
+  <h2 class="section-title">Línea de tiempo</h2>
+
+  <div id="lineaTiempo" class="timeline">
+    <div class="mensaje">Cargando eventos...</div>
+  </div>
+
+  <h2 class="section-title">Historial completo</h2>
+
+  <div class="table-container">
+    <table>
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Casa</th>
+          <th>Dispositivo</th>
+          <th>Acción</th>
+          <th>Fecha y hora</th>
+        </tr>
+      </thead>
+
+      <tbody id="tablaEventos">
+        <tr>
+          <td colspan="5">Cargando...</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+</main>
+
+<footer>
+  Casa Inteligente | ESP32 + Adafruit IO + Ethereum Sepolia
+</footer>
+
+<script>
+
+  // ID de la casa configurada en Flask
+  const CASA_ID = "casa01";
+
+  // Eventos obtenidos desde el contrato inteligente
+  let eventos = [];
+
+  // Convierte timestamp UNIX a fecha local
+  function convertirFecha(timestamp) {
+    const numero = Number(timestamp);
+
+    if (!Number.isFinite(numero) || numero <= 0) {
+      return "Fecha desconocida";
+    }
+
+    return new Date(numero * 1000).toLocaleString("es-CO", {
+      year: "numeric",
+      month: "2-digit",
+      day: "2-digit",
+      hour: "2-digit",
+      minute: "2-digit",
+      second: "2-digit"
+    });
+  }
+
+  // Identifica el nombre del dispositivo
+  function nombreDispositivo(dispositivo) {
+    if (dispositivo === "foco1") return "Foco 1";
+    if (dispositivo === "foco2") return "Foco 2";
+    return dispositivo;
+  }
+
+  // Texto del estado
+  function nombreEstado(estado) {
+    if (estado === "ON") return "ENCENDIDO";
+    if (estado === "OFF") return "APAGADO";
+    return estado;
+  }
+
+  // Cargar información desde Flask
+  async function cargarEventos() {
+    const conexion = document.getElementById("conexion");
+
+    conexion.textContent = "Consultando blockchain...";
+    conexion.className = "";
+
+    try {
+      const respuesta = await fetch("/eventos", {
+        cache: "no-store"
+      });
+
+      if (!respuesta.ok) {
+        throw new Error(
+          "Error HTTP " + respuesta.status
+        );
+      }
+
+      const datos = await respuesta.json();
+
+      if (!datos.ok || !Array.isArray(datos.eventos)) {
+        throw new Error(
+          datos.error || "Respuesta inválida del servidor"
+        );
+      }
+
+      // Mostrar únicamente los eventos de esta casa
+      // y de sus dos focos.
+      eventos = datos.eventos.filter(evento =>
+        evento.casa === CASA_ID &&
+        ["foco1", "foco2"].includes(evento.dispositivo) &&
+        ["ON", "OFF"].includes(evento.estado)
+      );
+
+      // Ordenar del más reciente al más antiguo
+      eventos.sort((a, b) => {
+        const diferencia =
+          Number(b.timestamp) - Number(a.timestamp);
+
+        if (diferencia !== 0) {
+          return diferencia;
+        }
+
+        return Number(b.id) - Number(a.id);
+      });
+
+      actualizarEstadisticas();
+      actualizarEstados();
+      mostrarHistorial();
+
+      conexion.textContent =
+        "Blockchain conectada | " +
+        eventos.length +
+        " eventos de focos";
+
+    } catch (error) {
+      console.error("Error:", error);
+
+      conexion.textContent =
+        "Error de conexión: " + error.message;
+
+      conexion.className = "error";
+
+      document.getElementById("lineaTiempo").innerHTML =
+        '<div class="mensaje error">' +
+        'No se pudieron cargar los eventos.' +
+        '</div>';
+
+      document.getElementById("tablaEventos").replaceChildren();
+
+    }
+  }
+
+  // Actualizar estadísticas
+  function actualizarEstadisticas() {
+    const encendidos = eventos.filter(
+      evento => evento.estado === "ON"
+    ).length;
+
+    const apagados = eventos.filter(
+      evento => evento.estado === "OFF"
+    ).length;
+
+    document.getElementById("totalEventos").textContent =
+      eventos.length;
+
+    document.getElementById("totalOn").textContent =
+      encendidos;
+
+    document.getElementById("totalOff").textContent =
+      apagados;
+  }
+
+  // Actualizar el último estado registrado de cada foco
+  function actualizarEstados() {
+    actualizarFoco("foco1", "estadoFoco1", "fechaFoco1");
+    actualizarFoco("foco2", "estadoFoco2", "fechaFoco2");
+  }
+
+  function actualizarFoco(dispositivo, estadoId, fechaId) {
+    const elementoEstado = document.getElementById(estadoId);
+    const elementoFecha = document.getElementById(fechaId);
+
+    const ultimoEvento = eventos.find(
+      evento => evento.dispositivo === dispositivo
+    );
+
+    if (!ultimoEvento) {
+      elementoEstado.textContent = "Sin registros";
+      elementoEstado.className = "estado desconocido";
+      elementoFecha.textContent = "Sin actividad";
+      return;
+    }
+
+    if (ultimoEvento.estado === "ON") {
+      elementoEstado.textContent = "💡 ENCENDIDO";
+      elementoEstado.className = "estado on";
+    } else {
+      elementoEstado.textContent = "APAGADO";
+      elementoEstado.className = "estado off";
+    }
+
+    elementoFecha.textContent =
+      "Último cambio: " +
+      convertirFecha(ultimoEvento.timestamp);
+  }
+
+  // Aplicar filtros
+  function obtenerEventosFiltrados() {
+    const filtroFoco =
+      document.getElementById("filtroFoco").value;
+
+    const filtroEstado =
+      document.getElementById("filtroEstado").value;
+
+    return eventos.filter(evento => {
+      const coincideFoco =
+        filtroFoco === "todos" ||
+        evento.dispositivo === filtroFoco;
+
+      const coincideEstado =
+        filtroEstado === "todos" ||
+        evento.estado === filtroEstado;
+
+      return coincideFoco && coincideEstado;
+    });
+  }
+
+  // Mostrar línea de tiempo y tabla
+  function mostrarHistorial() {
+    const filtrados = obtenerEventosFiltrados();
+
+    const lineaTiempo =
+      document.getElementById("lineaTiempo");
+
+    const tabla =
+      document.getElementById("tablaEventos");
+
+    // Limpiar contenido anterior
+    lineaTiempo.replaceChildren();
+    tabla.replaceChildren();
+
+    if (filtrados.length === 0) {
+      const mensaje = document.createElement("div");
+      mensaje.className = "mensaje";
+      mensaje.textContent =
+        "No existen eventos registrados para este filtro.";
+
+      lineaTiempo.appendChild(mensaje);
+
+      const fila = document.createElement("tr");
+      const celda = document.createElement("td");
+
+      celda.colSpan = 5;
+      celda.textContent = "Sin eventos registrados";
+
+      fila.appendChild(celda);
+      tabla.appendChild(fila);
+      return;
+    }
+
+    filtrados.forEach(evento => {
+      const encendido = evento.estado === "ON";
+
+      // Línea de tiempo
+      const tarjeta = document.createElement("div");
+      tarjeta.className = "evento";
+
+      const titulo = document.createElement("h3");
+      titulo.className = encendido ? "on" : "off";
+      titulo.textContent =
+        (encendido ? "💡 " : "○ ") +
+        nombreDispositivo(evento.dispositivo) +
+        " " +
+        nombreEstado(evento.estado);
+
+      const fecha = document.createElement("p");
+      fecha.textContent =
+        "Fecha: " + convertirFecha(evento.timestamp);
+
+      const casa = document.createElement("p");
+      casa.textContent = "Casa: " + evento.casa;
+
+      const identificador = document.createElement("p");
+      identificador.textContent =
+        "Evento blockchain #" + evento.id;
+
+      tarjeta.appendChild(titulo);
+      tarjeta.appendChild(fecha);
+      tarjeta.appendChild(casa);
+      tarjeta.appendChild(identificador);
+
+      lineaTiempo.appendChild(tarjeta);
+
+      // Tabla de historial
+      const fila = document.createElement("tr");
+
+      const valores = [
+        evento.id,
+        evento.casa,
+        nombreDispositivo(evento.dispositivo),
+        nombreEstado(evento.estado),
+        convertirFecha(evento.timestamp)
+      ];
+
+      valores.forEach((valor, indice) => {
+        const celda = document.createElement("td");
+        celda.textContent = valor;
+
+        if (indice === 3) {
+          celda.className = encendido ? "on" : "off";
+        }
+
+        fila.appendChild(celda);
+      });
+
+      tabla.appendChild(fila);
+    });
+  }
+
+  // Primera consulta
+  cargarEventos();
+
+  // Actualización automática cada 30 segundos
+  setInterval(cargarEventos, 30000);
+
+</script>
+
+</body>
+</html>
